@@ -1,14 +1,18 @@
-import { Button, ButtonGroup, Grid, GridItem, Show } from "@chakra-ui/react";
-import NavBar from "./components/NavBar";
+import { Grid, GridItem, Show } from "@chakra-ui/react";
+import { useState } from "react";
 import GameGrid from "./components/GameGrid";
 import GenreList from "./components/GenreList";
+import NavBar from "./components/NavBar";
+import { Genre } from "./hooks/useGenres";
 
 function App() {
+  const [selectedGenre, setSelectedGenre] = useState<Genre | null>(null);
+
   return (
     <Grid
       templateAreas={{
-        base: '"nav" "main"', // most devices
-        lg: '"nav nav" "aside main"', // large devices more the 1024px
+        base: `"nav" "main"`,
+        lg: `"nav nav" "aside main"`,
       }}
       templateColumns={{
         base: "1fr",
@@ -16,18 +20,21 @@ function App() {
       }}
     >
       <GridItem area="nav">
-        <NavBar></NavBar>
+        <NavBar />
       </GridItem>
       <Show above="lg">
-        {/* Showing the Aside grid only on large devices more than 1024px*/}
         <GridItem area="aside" paddingX={5}>
-          <GenreList></GenreList>
+          <GenreList
+            selectedGenre={selectedGenre}
+            onSelectGenre={(genre) => setSelectedGenre(genre)}
+          />
         </GridItem>
       </Show>
       <GridItem area="main">
-        <GameGrid></GameGrid>
+        <GameGrid selectedGenre={selectedGenre} />
       </GridItem>
     </Grid>
   );
 }
+
 export default App;
